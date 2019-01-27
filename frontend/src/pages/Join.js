@@ -21,9 +21,10 @@ export default class Join extends React.Component {
     handleSubmit = () => {
         this.setState({ joining: true }, () => {
             const socket = io(`localhost/client?name=${this.state.name}`);
-            socket.on('connect', (data) => {
-                console.log(data)
+            socket.on('joined', ({ name, color }) => {
                 this.setState({ 
+                    name,
+                    teamColor: color,
                     joining: false,
                     toWarPage: true,
                     socket,
@@ -51,7 +52,7 @@ export default class Join extends React.Component {
                         joining={joining}/>
                 }
                 {
-                    toWarPage && <War color={color} socket={socket}/>
+                    toWarPage && <War teamColor={color} socket={socket}/>
                 }
             </div>
         );

@@ -4,12 +4,12 @@ import Player from "./models/Player";
 const MAX_SCORE = 100;
 
 export default class TapOfWar {
-    init() {
+    init(colors) {
         this.first = true;
         this.isStarted = false;
 
-        this.firstTeam = new Team(1, 'Team 1', MAX_SCORE/2);
-        this.secondTeam = new Team(2, 'Team 2', MAX_SCORE/2);
+        this.firstTeam = new Team(0, 'Team 1', MAX_SCORE/2, colors[0]);
+        this.secondTeam = new Team(1, 'Team 2', MAX_SCORE/2, colors[1]);
     }
 
     addPlayerToGame(socketId, name) {

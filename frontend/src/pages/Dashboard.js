@@ -41,8 +41,20 @@ export default class Dashboard extends React.Component {
         teams: null,
     }
 
+
+    handleStart = () => {
+        this.state.socket.on('start', () => {
+        
+        });
+    }
+
     componentDidMount() {
         const socket = io('localhost/dashboard');
+
+        this.setState({
+            socket,
+        })
+
         socket.on('connect', () => {
             console.log('Connected');
             socket.emit('initialize');
@@ -53,12 +65,19 @@ export default class Dashboard extends React.Component {
             this.setState({ teams });
         });
 
-        // socket.on('connected', (teamId, name) => {
-        //     const { teams } = this.state;
-        //     teams[teamId] = { 
-        //         ...teams[teamId], roster: [...teams[teamId].roster, { name }],
-        //     }
-        // });
+        socket.on('joined', ({ teamId, name }) => {
+            const { teams } = this.state;
+            console.log(teams[teamId]);
+
+            teams[teamId] = { 
+                ...teams[teamId],
+                roster: [...teams[teamId].roster, { name }],
+            };
+
+            this.setState({
+                teams,
+            });
+        });
 
     }
 
@@ -87,7 +106,9 @@ export default class Dashboard extends React.Component {
                             width: '200px',
                             height: '50px',
                             margin: 'auto',
-                        }}>Battle!</Button>
+                        }}
+                        onClick={this.handleStart}
+                    >Battle!</Button>
                 </Grid.Row>
             </Grid>
         </div>
