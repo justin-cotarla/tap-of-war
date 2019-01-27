@@ -1,38 +1,29 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 
-import logo from './logo.svg';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+
+import Dashboard from './pages/Dashboard';
+
 import './App.css';
 
 
 class App extends Component {
-  componentDidMount() {
-    const socket = io('localhost');
-    socket.on('push', data => {
-      console.log(data);
-    })
-  }
-
+    componentDidMount() {
+        const socket = io('localhost');
+        socket.on('push', data => {
+            console.log(data);
+        })
+    }
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+        return (
+            <BrowserRouter>
+                <Switch>
+                    <Route path="/join" component={Dashboard}/>
+                </Switch>
+            </BrowserRouter>
+        );
+    }
 }
-
+    
 export default App;
