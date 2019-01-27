@@ -42,7 +42,7 @@ export default class War extends React.Component {
         }
 
         if(gameEnded && endGameStats) {
-            return <GameEnd sstats={endGameStats}/>
+            return <GameEnd stats={endGameStats}/>
         }
 
         return <Tapper color={teamColor} active={gameStarted} socket={socket}/>

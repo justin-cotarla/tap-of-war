@@ -131,6 +131,17 @@ const init = () => {
                     client.emit('ended', {});
                     middleManSocket.emit('stop');
                     clearInterval(intervalIdMiddleMan);
+
+                    game.firstTeam.roster.forEach(x => {
+                        const socketId = x.socketId;
+                        const stats = game.calculateIndividualStats(socketId);
+                        io.to(socketId).emit('ended', stats);
+                    });
+                    game.secondTeam.roster.forEach(x => {
+                        const socketId = x.socketId;
+                        const stats = game.calculateIndividualStats(socketId);
+                        io.to(socketId).emit('ended', stats);
+                    });
                 }
             });
         });

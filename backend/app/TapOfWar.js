@@ -2,6 +2,7 @@ import Team from "./models/Team";
 import Player from "./models/Player";
 
 const MAX_SCORE = 100;
+const MAX_TIME = 60 * 30;
 
 export default class TapOfWar {
     init(colors) {
@@ -46,6 +47,32 @@ export default class TapOfWar {
 
         if (this.firstTeam.score === 0 || this.secondTeam.score === 0) {
             this.toggleGameStatus();
+        }
+    }
+
+    calculateIndividualStats = (id, timeSpent) => {
+        const teamId = this.firstTeam.roster.find(x => x.socketId === id) ? 0 : 1;
+        
+        const totalTaps = teamId === 0 
+            ? this.firstTeam.find(x => x.socketId === id).tapCount : this.secondTeam.find(x => x.socketId === id).tapCount;
+        const totalTeamTaps = teamId === 0 ? this.firstTeam.tapCount : this.secondTeam.tapCount;
+
+        const tapsPerSecond = totalTaps / timeSpent;
+        const avgTeamTapRate = totalTeamTaps / timeSpent;
+
+        const ratio = totalTaps / totalTeamTaps;
+
+        const won = teamId === 0 
+            ? this.firstTeam.score > this.secondTeam.score
+            : this.secondTeam.score > this.firstTeam.score;
+
+        return {
+            won,
+            totalTaps,
+            totalTeamTaps,
+            tapsPerSecond,
+            avgTeamTapRate,
+            ratio
         }
     }
 }
