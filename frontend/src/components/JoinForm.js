@@ -15,7 +15,14 @@ const JoinForm = (props) => {
                         name="name"
                         value={name}
                         onChange={handleChange}/>
-                    <Button fluid type='submit' disabled={joining || !name} loading={joining}>Join!</Button>
+                    <Button 
+                        fluid 
+                        type='submit' 
+                        disabled={joining || !name} 
+                        loading={joining}
+                        style={{ boxShadow: '0 3px 0 black' }}>
+                            Join!
+                    </Button>
                 </Form>
             </Grid.Column>
         </Grid>
