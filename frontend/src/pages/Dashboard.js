@@ -11,11 +11,11 @@ export default class Dashboard extends React.Component {
     state = {
         teams: null,
         gameStarted: false,
-        gameLength: 5,
+        gameLength: 20,
     }
 
     componentDidMount() {
-        const socket = io('localhost/dashboard');
+        const socket = io(`${process.env.REACT_APP_IP}/dashboard`);
 
         this.setState({
             socket,

@@ -10,7 +10,7 @@ import './App.css';
 
 class App extends Component {
     componentDidMount() {
-        const socket = io('localhost');
+        const socket = io(process.env.REACT_APP_IP);
         socket.on('push', data => {
             console.log(data);
         })

@@ -20,7 +20,7 @@ export default class Join extends React.Component {
     handleChange = (e, { name, value }) => this.setState({ [name]: value });
     handleSubmit = () => {
         this.setState({ joining: true }, () => {
-            const socket = io(`localhost/client?name=${this.state.name}`);
+            const socket = io(`${process.env.REACT_APP_IP}/client?name=${this.state.name}`);
             socket.on('joined', ({ name, color }) => {
                 this.setState({ 
                     name,
