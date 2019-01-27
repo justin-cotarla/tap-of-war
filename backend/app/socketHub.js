@@ -1,10 +1,11 @@
+import GameCache from './cache/GameCache';
+import TapOfWar from './models/TapOfWar';
 const io = require('socket.io')();
-
-// TODO: middleman connection
 
 io.on('connect', client => {
     const playerName = socket.handshake.query.name;
     // TODO: Create new player with name and assign to team
+    GameCache.getGameFromCache(1).addPlayerToGame(client.id, playerName);
     client.emit('connected', {
         name: playerName,
         teamId: 0,
@@ -12,8 +13,13 @@ io.on('connect', client => {
 });
 
 io.on('tap', client => {
-    // Check client.id to see which team
-    // emit to middleman
+    // RGB array
+    GameCache.getGameFromCache(1).updateScore(client.id);
+    io.of('/middleman').emit('set', {});
+});
+
+io.of('/middleman').on('connect', client => {
+    client.emit('connected');
 });
 
 io.of('/dashboard').on('connect', client => {
@@ -22,18 +28,31 @@ io.of('/dashboard').on('connect', client => {
 
 io.of('/dashboard').on('start', client => {
     // Start the game
-    client.emit('started');
+    game = GameCache.getGameFromCache(1);
+    if (!game.gameStarted){
+        game.toggleGameStatus();
+        client.emit('started');
+    } else {
+        client.emit('failed');
+    }
 });
 
 io.of('/dashboard').on('end', client => {
     // End game and calculate stats
-    client.emit('ended');
+    game = GameCache.getGameFromCache(1);
+    if (game.gameStarted) {
+        game.toggleGameStatus();
+        client.emit('ended', {});
+    } else {
+        client.emit('failed');
+    }
 });
 
 io.of('/dashboard').on('initialize', client => {
     // Initialize game and teams
     // team 1
     // team 2
+    GameCache.addGameToCache(new TapOfWar(1));
     client.emit('initialized', {});
 });
 
