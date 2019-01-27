@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid, Header, Button } from 'semantic-ui-react';
+import { Grid, Button } from 'semantic-ui-react';
 
+import Title from '../components/Title';
 import Team from '../components/Team';
 
 const rosterA = [
@@ -37,20 +38,11 @@ export default class Dashboard extends React.Component {
     render() {
         return <Grid style={{ 
             height: '100%',
-            marginTop: '1em',
-            padding: '1em 4em', 
+            padding: '0 4em', 
         }}>
             <Grid.Row>
                 <Grid.Column width={16} textAlign="center">
-                    <Header 
-                        textAlign="center" 
-                        as="h1"
-                        style={{
-                            fontSize: '42px',
-                            margin: '1em',
-                        }}>
-                        Tap Of War!
-                    </Header>
+                    <Title/>
                 </Grid.Column>      
             </Grid.Row>
             <Grid.Row>
@@ -61,9 +53,14 @@ export default class Dashboard extends React.Component {
                     <Team name="B" roster={rosterB}/>
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row centered style={{ margin: '1em 0' }}>
-                <Button attached="bottom" size="big" style={{ width: '200px' }}>Battle!</Button>
-            </Grid.Row>
+            <Button 
+                attached="bottom"
+                size="big" 
+                style={{ 
+                    width: '200px',
+                    height: '50px',
+                    margin: 'auto',
+                }}>Battle!</Button>
         </Grid>
     }
 }

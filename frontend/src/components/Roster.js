@@ -7,7 +7,7 @@ const Roster = (props) => {
     return (
         <Card.Group itemsPerRow={1}>
             {roster.length === 0 && <Header as="h1">No one's here :(</Header>}
-            {roster.map(player => <Player player={player}/>)}
+            {roster.map(player => <Player key={player.name} player={player}/>)}
         </Card.Group>
     )
 }
