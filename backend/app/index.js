@@ -61,18 +61,20 @@ const init = () => {
                 convert.keyword.rgb(colors[1]),
             ]);
 
-            socket.emit('initialized', {
-                0: {
+            socket.emit('initialized', [
+                {
+                    id: 0,
                     name: 'Team 1',
                     color: colors[0],
                     roster: [],
                 },
-                1: {
+                {
+                    id: 1,
                     name: 'Team 2',
                     color: colors[1],
                     roster: [],
                 }
-            });
+            ]);
         });
     });
 

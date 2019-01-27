@@ -49,7 +49,7 @@ export default class Dashboard extends React.Component {
         });
         socket.on('initialized', (teams) => {
             console.log('Initialized');
-            console.log(teams);
+            console.log(teams)
             this.setState({ teams });
         });
 
@@ -77,7 +77,7 @@ export default class Dashboard extends React.Component {
             {
                 teams && teams.map((team) => (
                     <Grid.Column key={team.name} width={8}>
-                        <Team name={team.name} color={team.color} roster={rosterA}/>
+                        <Team name={team.name} color={team.color} roster={team.roster}/>
                     </Grid.Column>
                 ))
             }
