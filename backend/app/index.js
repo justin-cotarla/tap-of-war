@@ -39,14 +39,14 @@ const generateGradient = (team1Color, team2Color, percent) => {
         if (code < 0) {
             return {
                 r: team1Color[0],
-                b: team1Color[1],
-                g: team1Color[2],
+                g: team1Color[1],
+                b: team1Color[2],
             };
         } else if (code > 0) {
             return {
                 r: team2Color[0],
-                b: team2Color[1],
-                g: team2Color[2],
+                g: team2Color[1],
+                b: team2Color[2],
             };
         } else {
             return {
@@ -62,7 +62,7 @@ const init = () => {
     io.of('/client').on('connect', socket => {
         const playerName = socket.handshake.query.name;
 
-        if (game && game.isStarted) {
+        if (!game || game.isStarted) {
             return;
         }
 
@@ -71,7 +71,7 @@ const init = () => {
         });
 
         // Create new player with name and assign to team
-        const teamId = game.addPlayerToGame(socket.id, playerName);
+        const teamId = game.addPlayerToGame(socket.id, playerName, socket);
         socket.emit('joined', {
             name: playerName,
             color: convert.rgb.keyword(teamId === 0 ? game.firstTeam.color : game.secondTeam.color),
@@ -132,23 +132,55 @@ const init = () => {
                 }
             });
 
-            socket.on('end', client => {
+            socket.on('end', () => {
                 // End game and calculate stats
                 if (game.isStarted) {
                     game.end();
-                    client.emit('ended', {});
+                    socket.emit('ended');
                     middleManSocket.emit('stop');
                     clearInterval(intervalIdMiddleMan);
 
-                    game.firstTeam.roster.forEach(x => {
-                        const socketId = x.socketId;
+                    let color = {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                    };
+                    if (game.firstTeam.score > game.secondTeam.score) {
+                        color = {
+                            r: game.firstTeam.color[0],
+                            g: game.firstTeam.color[1],
+                            b: game.firstTeam.color[2],
+                        };
+                    } else if (game.firstTeam.score < game.secondTeam.score) {
+                        color = {
+                            r: game.secondTeam.color[0],
+                            g: game.secondTeam.color[1],
+                            b: game.secondTeam.color[2],
+                        };
+                    }
+
+                    middleManSocket.emit('set', [
+                        color,
+                        color,
+                        color,
+                        color,
+                        color,
+                        color,
+                        color,
+                        color,
+                        color,
+                    ]);
+
+                    game.firstTeam.roster.forEach(player => {
+                        const socketId = player.socketId;
                         const stats = game.calculateIndividualStats(socketId);
-                        io.to(socketId).emit('ended', stats);
+                        player.socket.emit('ended', stats);
+                        console.log(stats);
                     });
-                    game.secondTeam.roster.forEach(x => {
-                        const socketId = x.socketId;
+                    game.secondTeam.roster.forEach(player => {
+                        const socketId = player.socketId;
                         const stats = game.calculateIndividualStats(socketId);
-                        io.to(socketId).emit('ended', stats);
+                        player.socket.emit('ended', stats);
                     });
                 }
             });

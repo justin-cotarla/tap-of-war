@@ -11,7 +11,7 @@ export default class Dashboard extends React.Component {
     state = {
         teams: null,
         gameStarted: false,
-        gameLength: 15,
+        gameLength: 5,
     }
 
     componentDidMount() {

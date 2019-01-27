@@ -23,6 +23,7 @@ export default class War extends React.Component {
         });
 
         socket.on('ended', (stats) => {
+            console.log(stats);
             this.setState({ gameEnded: true, endGameStats: stats, });
         });
     }

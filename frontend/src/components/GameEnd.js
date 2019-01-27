@@ -3,13 +3,13 @@ import { Header, Statistic, Grid } from 'semantic-ui-react';
 
 export default class GameEnd extends React.Component {
     render() {
-        const { won, totalTaps, totalTeamTaps, tapsPerSecond, avgTeamTapRate, ratio, color } = this.props;
+        const { won, totalTaps, totalTeamTaps, tapsPerSecond, avgTeamTapRate, ratio, color } = this.props.stats;
         return <Grid  verticalAlign="middle" style={{ height: '100%', backgroundColor: color }}>
             <Grid.Column style={{ maxWidth: '90%', margin: 'auto' }}>
                 <Header as="h1" style={{ display: 'inline', fontSize: '32px' }}>
                     Your team {won ? 'won!' : 'lost :('}
                 </Header>
-                <Header as="h2" style={{ margin: '0.5em' }}>
+                {/*<Header as="h2" style={{ margin: '0.5em' }}>
                     Team
                 </Header>
                 <Statistic.Group style={{ flexDirection: 'column', margin: '0.5em' }}>
@@ -38,7 +38,7 @@ export default class GameEnd extends React.Component {
                         <Statistic.Value>{ratio}</Statistic.Value>
                         <Statistic.Label>Contribution towards team count</Statistic.Label>
                     </Statistic>
-                </Statistic.Group>
+                </Statistic.Group> */}
             </Grid.Column>
         </Grid>
     }

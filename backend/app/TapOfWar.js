@@ -17,8 +17,8 @@ export default class TapOfWar {
         this.secondTeam = new Team(1, 'Team 2', MAX_SCORE/2, colors[1]);
     }
 
-    addPlayerToGame(socketId, name) {
-        const player = new Player(socketId, name);
+    addPlayerToGame(socketId, name, socket) {
+        const player = new Player(socketId, name, socket);
         if (this.first) {
             this.firstTeam.addPlayer(player);
             this.first = !this.first;
@@ -47,18 +47,18 @@ export default class TapOfWar {
             this.firstTeam.decrementScore();
         }
 
-        console.log(`Team 1: ${this.firstTeam.score} | Team 2: ${this.secondTeam.score}`);
+        // console.log(`Team 1: ${this.firstTeam.score} | Team 2: ${this.secondTeam.score}`);
 
-        if (this.firstTeam.score === 0 || this.secondTeam.score === 0) {
-            this.toggleGameStatus();
-        }
+        // if (this.firstTeam.score === 0 || this.secondTeam.score === 0) {
+        //     this.end();
+        // }
     }
 
     calculateIndividualStats(id, timeSpent) {
         const teamId = this.firstTeam.roster.find(x => x.socketId === id) ? 0 : 1;
         
         const totalTaps = teamId === 0 
-            ? this.firstTeam.find(x => x.socketId === id).tapCount : this.secondTeam.find(x => x.socketId === id).tapCount;
+            ? this.firstTeam.roster.find(x => x.socketId === id).tapCount : this.secondTeam.roster.find(x => x.socketId === id).tapCount;
         const totalTeamTaps = teamId === 0 ? this.firstTeam.tapCount : this.secondTeam.tapCount;
 
         const tapsPerSecond = totalTaps / timeSpent;
