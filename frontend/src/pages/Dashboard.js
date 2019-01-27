@@ -3,49 +3,15 @@ import { Grid, Button } from 'semantic-ui-react';
 
 import Title from '../components/Title';
 import Team from '../components/Team';
+import Timer from '../components/Timer';
 
 import io from 'socket.io-client';
-
-const rosterA = [
-    {
-        name: 'Jay',
-    },
-    {
-        name: 'Derek',
-    },
-    {
-        name: 'Justin',
-    },
-    {
-        name: 'Irina',
-    },
-];
-
-const rosterB = [    
-    {
-        name: 'Tamar',
-    },
-    {
-        name: 'Mat',
-    },
-    {
-        name: 'Zach',
-    },
-    {
-        name: 'Berge',
-    },
-];
 
 export default class Dashboard extends React.Component {
     state = {
         teams: null,
-    }
-
-
-    handleStart = () => {
-        this.state.socket.on('start', () => {
-        
-        });
+        gameStarted: false,
+        gameLength: 15,
     }
 
     componentDidMount() {
@@ -81,8 +47,22 @@ export default class Dashboard extends React.Component {
 
     }
 
+    handleStart = () => {
+        this.setState({ gameStarted: true }, () => {
+            this.state.socket.emit('start');
+        });
+    }
+
+    handleTimerEnd = () => {
+        this.setState({ gameEnded: true }, () => {
+            this.state.socket.emit('end', () => ({
+                time: this.state.gameLength,
+            }));
+        });
+    }
+
     render() {
-        const { teams } = this.state;
+        const { teams, gameStarted, gameLength } = this.state;
         return <div>
             <Title/>
             <Grid  style={{ 
@@ -99,16 +79,23 @@ export default class Dashboard extends React.Component {
                 }
                 </Grid.Row>
                 <Grid.Row style={{ height: '30%' }}>
-                    <Button 
-                        attached="bottom"
-                        size="big" 
-                        style={{ 
-                            width: '200px',
-                            height: '50px',
-                            margin: 'auto',
-                        }}
-                        onClick={this.handleStart}
-                    >Battle!</Button>
+                    {
+                        !gameStarted && <Button 
+                            disabled={gameStarted}
+                            attached="bottom"
+                            size="big" 
+                            style={{ 
+                                width: '200px',
+                                height: '50px',
+                                margin: 'auto',
+                            }}
+                            onClick={this.handleStart}>
+                                Battle!
+                        </Button>
+                    }
+                    {
+                        gameStarted && <Timer value={gameLength} onTimerEnd={this.handleTimerEnd}/>
+                    }
                 </Grid.Row>
             </Grid>
         </div>

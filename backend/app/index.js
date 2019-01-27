@@ -108,11 +108,11 @@ const init = () => {
                 }
             ]);
 
-            socket.on('start', client => {
+            socket.on('start', () => {
                 // Start the game
                 if (!game.isStarted){
                     game.start();
-                    client.emit('started');
+                    socket.emit('started');
                     middleManSocket.emit('start');
                     intervalIdMiddleMan = setInterval(() => {
                         middleManSocket.emit('set', generateGradient(
