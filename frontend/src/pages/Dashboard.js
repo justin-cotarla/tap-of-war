@@ -42,17 +42,16 @@ export default class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        const socket = io('localhost');
+        const socket = io('localhost/dashboard');
         socket.on('connect', () => {
-            console.log('Connected to server');
+            console.log('connected');
             socket.emit('initialize');
         });
-
-        socket.on('initialized', (teams) => {
-            console.log('Initialized');
-            console.log(teams);
-            this.setState({ teams });
-        });
+        // socket.on('initialized', (teams) => {
+        //     console.log('Initialized');
+        //     console.log(teams);
+        //     this.setState({ teams });
+        // });
 
         // socket.on('connected', (teamId, name) => {
         //     const { teams } = this.state;

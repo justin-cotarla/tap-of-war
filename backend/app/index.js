@@ -1,4 +1,5 @@
 import TapOfWar from './TapOfWar';
+import convert from 'color-convert';
 
 const io = require('socket.io')();
 
@@ -16,7 +17,7 @@ const colors = [
 
 const generateColors = () => {
     const colorA = Math.random() * (colors.length);
-    const colorB = (colorB + 4) % colors.length;
+    const colorB = (colorA + 4) % colors.length;
 
     return [colorA, colorB];
 }
@@ -51,17 +52,15 @@ const init = () => {
 
     io.of('/dashboard').on('connect', socket => {
         console.log('Connected to dashboard');
-        
-        
-        dashboardSocket.on('initialize', client => {
+        socket.on('initialize', client => {
             console.log('initialized')
             const colors = generateColors();
             game.init([
                 convert.keyword.rgb(colors[0]),
                 convert.keyword.rgb(colors[1]),
             ]);
-            console.log(colors);
-            client.emit('initialized', colors);
+
+            socket.emit('initialized', colors);
         });
     });
 
