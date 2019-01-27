@@ -16,8 +16,9 @@ const colors = [
 ];
 
 const generateColors = () => {
-    const colorA = Math.random() * (colors.length);
-    const colorB = (colorA + 4) % colors.length;
+    const random = Math.floor(Math.random() * (colors.length));
+    const colorA = colors[random];
+    const colorB = colors[(random + 4) % colors.length];
 
     return [colorA, colorB];
 }
@@ -60,7 +61,18 @@ const init = () => {
                 convert.keyword.rgb(colors[1]),
             ]);
 
-            socket.emit('initialized', colors);
+            socket.emit('initialized', {
+                0: {
+                    name: 'Team 1',
+                    color: colors[0],
+                    roster: [],
+                },
+                1: {
+                    name: 'Team 2',
+                    color: colors[1],
+                    roster: [],
+                }
+            });
         });
     });
 
