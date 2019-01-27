@@ -4,6 +4,7 @@ import convert from 'color-convert';
 const io = require('socket.io')();
 
 const game = new TapOfWar();
+let middleManSocket;
 
 const colors = [
     'red',
@@ -24,31 +25,28 @@ const generateColors = () => {
 }
 
 const init = () => {
-    // io.of('/client').on('connect', client => {
-    //     const playerName = socket.handshake.query.name;
+    io.of('/client').on('connect', socket => {
+        const playerName = socket.handshake.query.name;
 
-    //     if (game.isStarted) {
-    //         return;
-    //     }
-    //     // Create new player with name and assign to team
-    //     const teamId = game.addPlayerToGame(client.id, playerName);
-    //     client.emit('connected', {
-    //         name: playerName,
-    //         teamId: teamId,
-    //     });
-    // });
+        if (game.isStarted) {
+            return;
+        }
 
-    // io.on('tap', client => {
-    //     // RGB array
-    //     GameCache.getGameFromCache(1).updateScore(client.id);
-    //     io.of('/middleman').emit('set', {});
-    // });
+        socket.on('tap', client => {
+            game.addPoint(client.id);
+        });
 
-
-
+        // Create new player with name and assign to team
+        const teamId = game.addPlayerToGame(client.id, playerName);
+        client.emit('connected', {
+            name: playerName,
+            teamId: teamId,
+        });
+    });
 
     io.of('/middleman').on('connect', socket => {
         console.log('Connected to middleman');
+        middleManSocket = socket;
     });
 
     io.of('/dashboard').on('connect', socket => {
@@ -75,32 +73,26 @@ const init = () => {
                     roster: [],
                 }
             ]);
+
+            socket.on('start', client => {
+                // Start the game
+                if (!game.isStarted){
+                    game.start();
+                    client.emit('started');
+                    middleManSocket.emit('start');
+                }
+            });
+
+            socket.on('end', client => {
+                // End game and calculate stats
+                if (game.isStarted) {
+                    game.end();
+                    client.emit('ended', {});
+                    middleManSocket.emit('stop');
+                }
+            });
         });
     });
-
-    // io.of('/dashboard').on('start', client => {
-    //     // Start the game
-    //     const game = GameCache.getGameFromCache(1);
-    //     if (!game.gameStarted){
-    //         game.toggleGameStatus();
-    //         client.emit('started');
-    //     } else {
-    //         client.emit('failed');
-    //     }
-    // });
-
-    // io.of('/dashboard').on('end', client => {
-    //     // End game and calculate stats
-    //     const game = GameCache.getGameFromCache(1);
-    //     if (game.gameStarted) {
-    //         game.toggleGameStatus();
-    //         GameCache.removeGameFromCache(1);
-    //         client.emit('ended', {});
-    //     } else {
-    //         client.emit('failed');
-    //     }
-    // });
-
 
     io.listen(4000);
 

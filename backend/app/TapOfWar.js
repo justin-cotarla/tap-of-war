@@ -25,11 +25,11 @@ export default class TapOfWar {
         }
     } 
 
-    startGame() {
+    start() {
         this.isStarted = true;
     }
 
-    endGame() {
+    end() {
         this.isStarted = false;
     }
 
@@ -41,6 +41,9 @@ export default class TapOfWar {
             this.secondTeam.incrementScore();
             this.firstTeam.decrementScore();
         }
+
+        console.log(`Team 1: ${firstTeam.score} | Team 2: ${secondTeam.score}`);
+
         if (this.firstTeam.score === 0 || this.secondTeam.score === 0) {
             this.toggleGameStatus();
         }

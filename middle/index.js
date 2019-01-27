@@ -17,7 +17,7 @@ const initSockets = () => {
     })
 
     socket.on('set', data => {
-        const config = data.map(({ r, g, b}, index) => ({
+        const config = data.map(({ r, g, b }, index) => ({
             id: panels[index],
             g,
             r,

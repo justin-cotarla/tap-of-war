@@ -18,7 +18,7 @@ export default class Join extends React.Component {
     handleSubmit = () => {
         this.setState({ joining: true }, () => {
             const socket = io(`localhost?name=${this.state.name}`);
-            socket.on('connected', () => {
+            socket.on('connect', () => {
                 this.setState({ 
                     joining: false,
                     redirect: '/war',
@@ -31,9 +31,9 @@ export default class Join extends React.Component {
     render() {
         const { name, joining, redirect, socket } = this.state;
 
-        if(redirect) { 
-            return <Redirect push to={{
-                pathname: '/war',
+        if (redirect) { 
+            return <Redirect to={{
+                pathname: "/war",
                 state: { socket, name },
             }}/>
         }
