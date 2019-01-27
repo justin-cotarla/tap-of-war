@@ -4,7 +4,7 @@ import convert from 'color-convert';
 const io = require('socket.io')();
 
 
-const game = new TapOfWar();
+let game;
 let middleManSocket;
 let dashboardSocket;
 
@@ -37,14 +37,22 @@ const generateGradient = (team1Color, team2Color, percent) => {
 
     return gradient.map(code => {
         if (code < 0) {
-            return team1Color;
+            return {
+                r: team1Color[0],
+                b: team1Color[1],
+                g: team1Color[2],
+            };
         } else if (code > 0) {
-            return team2Color;
+            return {
+                r: team2Color[0],
+                b: team2Color[1],
+                g: team2Color[2],
+            };
         } else {
             return {
-                r: 0,
-                b: 0,
-                g: 0,
+                r: 255,
+                b: 255,
+                g: 255,
             }
         }
     });
@@ -54,20 +62,19 @@ const init = () => {
     io.of('/client').on('connect', socket => {
         const playerName = socket.handshake.query.name;
 
-        if (game.isStarted) {
+        if (game && game.isStarted) {
             return;
         }
 
-        socket.on('tap', client => {
-            game.addPoint(client.id);
+        socket.on('tap', () => {
+            game.addPoint(socket.id);
         });
 
         // Create new player with name and assign to team
         const teamId = game.addPlayerToGame(socket.id, playerName);
         socket.emit('joined', {
             name: playerName,
-            teamId,
-            color: convert.keyword.rgb(teamId === 0 ? game.firstTeam.color : game.secondTeam.color),
+            color: convert.rgb.keyword(teamId === 0 ? game.firstTeam.color : game.secondTeam.color),
         });
 
         dashboardSocket.emit('joined', {
@@ -86,7 +93,8 @@ const init = () => {
         socket.on('initialize', client => {
             console.log('initialized')
             const colors = generateColors();
-            game.init([
+            console.log(colors);
+            game = new TapOfWar([
                 convert.keyword.rgb(colors[0]),
                 convert.keyword.rgb(colors[1]),
             ]);
@@ -118,7 +126,7 @@ const init = () => {
                         middleManSocket.emit('set', generateGradient(
                             game.firstTeam.color,
                             game.secondTeam.color,
-                            game.firstTeam.score/(game.firstTeam.score + game.SecondTeam.score),
+                            game.firstTeam.score/(game.firstTeam.score + game.secondTeam.score),
                         ));
                     }, 200);
                 }

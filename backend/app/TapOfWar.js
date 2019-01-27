@@ -5,6 +5,10 @@ const MAX_SCORE = 100;
 const MAX_TIME = 60 * 30;
 
 export default class TapOfWar {
+    constructor(colors) {
+        this.init(colors);
+    }
+
     init(colors) {
         this.first = true;
         this.isStarted = false;
@@ -43,14 +47,14 @@ export default class TapOfWar {
             this.firstTeam.decrementScore();
         }
 
-        console.log(`Team 1: ${firstTeam.score} | Team 2: ${secondTeam.score}`);
+        console.log(`Team 1: ${this.firstTeam.score} | Team 2: ${this.secondTeam.score}`);
 
         if (this.firstTeam.score === 0 || this.secondTeam.score === 0) {
             this.toggleGameStatus();
         }
     }
 
-    calculateIndividualStats = (id, timeSpent) => {
+    calculateIndividualStats(id, timeSpent) {
         const teamId = this.firstTeam.roster.find(x => x.socketId === id) ? 0 : 1;
         
         const totalTaps = teamId === 0 

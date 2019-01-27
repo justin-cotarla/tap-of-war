@@ -39,7 +39,7 @@ export default class Join extends React.Component {
     }
 
     render() {
-        const { name, joining, socket, color, toWarPage  } = this.state;
+        const { name, joining, socket, teamColor, toWarPage  } = this.state;
 
         return (
             <div>
@@ -52,7 +52,7 @@ export default class Join extends React.Component {
                         joining={joining}/>
                 }
                 {
-                    toWarPage && <War teamColor={color} socket={socket}/>
+                    toWarPage && <War teamColor={teamColor} socket={socket}/>
                 }
             </div>
         );
