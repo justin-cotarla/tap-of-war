@@ -1,10 +1,11 @@
 import Hapi from 'hapi';
-const io = require('socket.io')();
+import io from 'SocketHub';
+// const io = require('socket.io')();
 
-io.on('connection', client => {
-    console.log("sup");
-    client.emit('push', 'hello');
-});
+// io.on('connection', client => {
+//     console.log("sup");
+//     client.emit('push', 'hello');
+// });
 io.listen(4000);
 
 const startServer = async () => {
