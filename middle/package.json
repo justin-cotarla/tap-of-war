@@ -1,0 +1,17 @@
+{
+  "name": "middle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "delay": "^4.1.0",
+    "local-devices": "^1.1.1",
+    "nanoleaves": "git+https://github.com/AdrieanKhisbe/nanoleaves#attempt-to-fix-set-static-panel",
+    "socket.io": "^2.2.0"
+  }
+}
