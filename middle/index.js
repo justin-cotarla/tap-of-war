@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+const io = require('socket.io-client');
 const AuroraAPI = require('nanoleaves');
 
 let aurora;
@@ -9,20 +9,13 @@ let intervalIdA;
 let intervalIdB;
 let intervalIdLoop;
 
-const init = async () => {
-    aurora = new AuroraAPI({
-        host: '192.168.43.141',
-        token: '9XE92jwz27H5rVjs9pRx5bYja9pR53qV',
-    });
-
-    const rawPanels = (await aurora.layout()).panels;
-
-    panels = rawPanels
-        .sort((a, b) => (a.x - b.x))
-        
-    panels = panels.map(({ id }) => id);
+const initSockets = () => {
     
-    socket = io('localhost');
+    socket = io('http://localhost/middleman');
+    socket.on('connect', () => {
+        console.log('Connected to server');
+    })
+
     socket.on('set', data => {
         const config = data.map(({ r, g, b}, index) => ({
             id: panels[index],
@@ -37,7 +30,21 @@ const init = async () => {
     })
     socket.on('stop', () => {
         animate();
-    })
+    });
+}
+
+const initNanoLeaf = async () => {
+    aurora = new AuroraAPI({
+        host: '192.168.43.141',
+        token: '9XE92jwz27H5rVjs9pRx5bYja9pR53qV',
+    });
+
+    const rawPanels = (await aurora.layout()).panels;
+
+    panels = rawPanels
+        .sort((a, b) => (a.x - b.x))
+        
+    panels = panels.map(({ id }) => id);
 }
 
 const setPanels = (config) => {
@@ -81,5 +88,6 @@ const stop = () => {
     clearInterval(intervalIdLoop);
 }
 
-init();
+initSockets();
+initNanoLeaf();
 animate();

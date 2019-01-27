@@ -42,18 +42,25 @@ export default class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        const socket = io('localhost/dashboard');
-        socket.emit('initialize');
+        const socket = io('localhost');
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            socket.emit('initialize');
+        });
+
         socket.on('initialized', (teams) => {
+            console.log('Initialized');
+            console.log(teams);
             this.setState({ teams });
         });
 
-        socket.on('connected', (teamId, name) => {
-            const { teams } = this.state;
-            teams[teamId] = { 
-                ...teams[teamId], roster: [...teams[teamId].roster, { name }],
-            }
-        });
+        // socket.on('connected', (teamId, name) => {
+        //     const { teams } = this.state;
+        //     teams[teamId] = { 
+        //         ...teams[teamId], roster: [...teams[teamId].roster, { name }],
+        //     }
+        // });
+
     }
 
     render() {

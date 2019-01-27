@@ -5,7 +5,7 @@ export default class Player {
         this.tapCount = 0;
     }
 
-    updateTapCount = () => {
+    updateTapCount() {
         this.tapCount++;
     }
 }

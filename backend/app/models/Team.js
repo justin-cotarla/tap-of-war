@@ -8,21 +8,23 @@ export default class Team {
         this.tapCount = 0;
     }
 
-    addPlayer = (player) => {
+    addPlayer(player) {
         this.roster.push(player);
     }
 
-    findPlayer = (socketId) => this.roster.find(x => x.socketId === socketId);
+    findPlayer(socketId) {
+        this.roster.find(x => x.socketId === socketId);
+    }
 
-    decrementScore = () => {
+    decrementScore() {
         this.score--;
     }
 
-    incrementScore = () => {
+    incrementScore() {
         this.score++;
     }
 
-    updateTapCount = () => {
+    updateTapCount() {
         this.tapCount++;
     }
 }

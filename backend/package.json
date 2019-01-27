@@ -8,6 +8,7 @@
     "build": "NODE_ENV=development babel app --out-dir dist"
   },
   "dependencies": {
+    "color-convert": "^1.9.3",
     "hapi": "^17.5.1",
     "socket.io": "^2.2.0"
   },
