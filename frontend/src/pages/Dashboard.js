@@ -64,32 +64,32 @@ export default class Dashboard extends React.Component {
 
     render() {
         const { teams } = this.state;
-        return <Grid style={{ 
-            height: '100%',
-            padding: '0 4em', 
-        }}>
-            <Grid.Row>
-                <Grid.Column width={16} textAlign="center">
-                    <Title/>
-                </Grid.Column>      
-            </Grid.Row>
-            <Grid.Row>
-            {
-                teams && teams.map((team) => (
-                    <Grid.Column key={team.name} width={8}>
-                        <Team name={team.name} color={team.color} roster={team.roster}/>
-                    </Grid.Column>
-                ))
-            }
-            </Grid.Row>
-            <Button 
-                attached="bottom"
-                size="big" 
-                style={{ 
-                    width: '200px',
-                    height: '50px',
-                    margin: 'auto',
-                }}>Battle!</Button>
-        </Grid>
+        return <div>
+            <Title/>
+            <Grid  style={{ 
+                height: '70vh',
+                padding: '0 4em', 
+            }}>
+                <Grid.Row style={{ height: '70%' }}>
+                {
+                    teams && teams.map((team) => (
+                        <Grid.Column key={team.name} width={8}>
+                            <Team name={team.name} color={team.color} roster={team.roster}/>
+                        </Grid.Column>
+                    ))
+                }
+                </Grid.Row>
+                <Grid.Row style={{ height: '30%' }}>
+                    <Button 
+                        attached="bottom"
+                        size="big" 
+                        style={{ 
+                            width: '200px',
+                            height: '50px',
+                            margin: 'auto',
+                        }}>Battle!</Button>
+                </Grid.Row>
+            </Grid>
+        </div>
     }
 }
