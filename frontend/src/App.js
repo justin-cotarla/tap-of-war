@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard';
+import Join from './pages/Join';
 
 import './App.css';
 
@@ -19,7 +20,8 @@ class App extends Component {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route path="/join" component={Dashboard}/>
+                    <Route exact path="/" component={Dashboard}/>
+                    <Route path="/join" component={Join}/>
                 </Switch>
             </BrowserRouter>
         );
