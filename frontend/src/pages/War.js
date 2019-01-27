@@ -8,9 +8,8 @@ export default class War extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            socket: this.props.location.state.socket,
-            name: '',
-            teamColor: this.props.location.state.color,
+            socket: this.props.socket,
+            teamColor: this.props.teamColor,
             gameStarted: false,
             gameEnded: false,
             endGameStats: null,
@@ -43,7 +42,7 @@ export default class War extends React.Component {
         }
 
         if(gameEnded && endGameStats) {
-            return <GameEnd player={name} stats={endGameStats}/>
+            return <GameEnd sstats={endGameStats}/>
         }
 
         return <Tapper color={teamColor} active={gameStarted} socket={socket}/>

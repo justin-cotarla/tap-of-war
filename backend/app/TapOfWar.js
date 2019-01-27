@@ -14,13 +14,13 @@ export default class TapOfWar {
 
     addPlayerToGame(socketId, name) {
         const player = new Player(socketId, name);
-        if (first) {
+        if (this.first) {
             this.firstTeam.addPlayer(player);
-            first = !first;
+            this.first = !this.first;
             return this.firstTeam.id;
         } else {
             this.secondTeam.addPlayer(player);
-            first = !first;
+            this.first = !this.first;
             return this.secondTeam.id;
         }
     } 

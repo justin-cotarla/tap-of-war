@@ -1,8 +1,10 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import Title from '../components/Title';
 import JoinForm from '../components/JoinForm';
+
+import War from '../pages/War';
 
 import io from 'socket.io-client';
 
@@ -10,42 +12,47 @@ export default class Join extends React.Component {
     state = {
         name: '',
         joining: false,
-        redirect: null,
         socket: null,
+        toWarPage: false,
+        teamColor: '',
     };
 
     handleChange = (e, { name, value }) => this.setState({ [name]: value });
     handleSubmit = () => {
         this.setState({ joining: true }, () => {
-            const socket = io(`localhost?name=${this.state.name}`);
-            socket.on('connect', () => {
+            const socket = io(`localhost/client?name=${this.state.name}`);
+            socket.on('connect', (data) => {
+                console.log(data)
                 this.setState({ 
                     joining: false,
-                    redirect: '/war',
+                    toWarPage: true,
                     socket,
                 });
             });
         });
     }
 
-    render() {
-        const { name, joining, redirect, socket } = this.state;
+    renderWarPage = (props) => {
+        const { socket } = this.state;
+        return <War {...props} socket={socket}/>;
+    }
 
-        if (redirect) { 
-            return <Redirect to={{
-                pathname: "/war",
-                state: { socket, name },
-            }}/>
-        }
+    render() {
+        const { name, joining, socket, color, toWarPage  } = this.state;
 
         return (
             <div>
                 <Title/>
-                <JoinForm 
-                    handleChange={this.handleChange} 
-                    handleSubmit={this.handleSubmit}
-                    name={name}
-                    joining={joining}/>
+                {
+                    !toWarPage && <JoinForm 
+                        handleChange={this.handleChange} 
+                        handleSubmit={this.handleSubmit}
+                        name={name}
+                        joining={joining}/>
+                }
+                {
+                    toWarPage && <War color={color} socket={socket}/>
+                }
             </div>
         );
     }

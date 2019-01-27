@@ -37,10 +37,11 @@ const init = () => {
         });
 
         // Create new player with name and assign to team
-        const teamId = game.addPlayerToGame(client.id, playerName);
-        client.emit('connected', {
+        const teamId = game.addPlayerToGame(socket.id, playerName);
+        socket.emit('connected', {
             name: playerName,
-            teamId: teamId,
+            teamId,
+            color: teamId === 1 ? game.firstTeam.color : game.secondTeam.color,
         });
     });
 
