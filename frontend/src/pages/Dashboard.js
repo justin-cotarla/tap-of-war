@@ -4,6 +4,8 @@ import { Grid, Button } from 'semantic-ui-react';
 import Title from '../components/Title';
 import Team from '../components/Team';
 
+import io from 'socket.io-client';
+
 const rosterA = [
     {
         name: 'Jay',
@@ -35,7 +37,27 @@ const rosterB = [
 ];
 
 export default class Dashboard extends React.Component {
+    state = {
+        teams: null,
+    }
+
+    componentDidMount() {
+        const socket = io('localhost/dashboard');
+        socket.emit('initialize');
+        socket.on('initialized', (teams) => {
+            this.setState({ teams });
+        });
+
+        socket.on('connected', (teamId, name) => {
+            const { teams } = this.state;
+            teams[teamId] = { 
+                ...teams[teamId], roster: [...teams[teamId].roster, { name }],
+            }
+        });
+    }
+
     render() {
+        const { teams } = this.state;
         return <Grid style={{ 
             height: '100%',
             padding: '0 4em', 
@@ -46,12 +68,13 @@ export default class Dashboard extends React.Component {
                 </Grid.Column>      
             </Grid.Row>
             <Grid.Row>
-                <Grid.Column width={8}>
-                    <Team name="A" roster={rosterA}/>
-                </Grid.Column>
-                <Grid.Column width={8}>
-                    <Team name="B" roster={rosterB}/>
-                </Grid.Column>
+            {
+                teams && teams.map((team) => (
+                    <Grid.Column key={team.name} width={8}>
+                        <Team name={team.name} color={team.color} roster={rosterA}/>
+                    </Grid.Column>
+                ))
+            }
             </Grid.Row>
             <Button 
                 attached="bottom"
