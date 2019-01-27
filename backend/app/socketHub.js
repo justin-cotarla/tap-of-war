@@ -4,12 +4,17 @@ const io = require('socket.io')();
 
 io.on('connect', client => {
     const playerName = socket.handshake.query.name;
-    // TODO: Create new player with name and assign to team
-    GameCache.getGameFromCache(1).addPlayerToGame(client.id, playerName);
-    client.emit('connected', {
-        name: playerName,
-        teamId: 0,
-    });
+    const game = GameCache.getGameFromCache(1);
+    // Create new player with name and assign to team
+    if (!game.gameStarted) {
+        const teamId = game.addPlayerToGame(client.id, playerName);
+        client.emit('connected', {
+            name: playerName,
+            teamId: teamId,
+        });   
+    } else {
+        client.emit('failed');
+    }
 });
 
 io.on('tap', client => {
@@ -28,7 +33,7 @@ io.of('/dashboard').on('connect', client => {
 
 io.of('/dashboard').on('start', client => {
     // Start the game
-    game = GameCache.getGameFromCache(1);
+    const game = GameCache.getGameFromCache(1);
     if (!game.gameStarted){
         game.toggleGameStatus();
         client.emit('started');
@@ -39,9 +44,10 @@ io.of('/dashboard').on('start', client => {
 
 io.of('/dashboard').on('end', client => {
     // End game and calculate stats
-    game = GameCache.getGameFromCache(1);
+    const game = GameCache.getGameFromCache(1);
     if (game.gameStarted) {
         game.toggleGameStatus();
+        GameCache.removeGameFromCache(1);
         client.emit('ended', {});
     } else {
         client.emit('failed');

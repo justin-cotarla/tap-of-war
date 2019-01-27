@@ -1,5 +1,5 @@
 import Hapi from 'hapi';
-import io from 'socketHub';
+import io from 'SocketHub';
 // const io = require('socket.io')();
 
 // io.on('connection', client => {

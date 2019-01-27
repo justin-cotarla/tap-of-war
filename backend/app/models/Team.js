@@ -1,8 +1,8 @@
 export default class Team {
-    constructor(id, score) {
+    constructor(id, name, score) {
         this.id = id;
-        this.color = ''; // randomly generate
-        this.name = ''; // randomly generate
+        this.color = ''  // TODO: randomly generate
+        this.name = name;
         this.roster = [];
         this.score = score;
         this.tapCount = 0;
@@ -26,3 +26,4 @@ export default class Team {
         this.tapCount++;
     }
 }
+
