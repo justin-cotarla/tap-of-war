@@ -112,7 +112,8 @@ const init = () => {
                 // Start the game
                 if (!game.isStarted){
                     game.start();
-                    client.emit('started');
+                    // client.emit('started');
+                    io.sockets.emit('started');
                     middleManSocket.emit('start');
                     intervalIdMiddleMan = setInterval(() => {
                         middleManSocket.emit('set', generateGradient(
@@ -131,6 +132,17 @@ const init = () => {
                     client.emit('ended', {});
                     middleManSocket.emit('stop');
                     clearInterval(intervalIdMiddleMan);
+
+                    game.firstTeam.roster.forEach(x => {
+                        const socketId = x.socketId;
+                        const stats = game.calculateIndividualStats(socketId);
+                        io.to(socketId).emit('ended', stats);
+                    });
+                    game.secondTeam.roster.forEach(x => {
+                        const socketId = x.socketId;
+                        const stats = game.calculateIndividualStats(socketId);
+                        io.to(socketId).emit('ended', stats);
+                    });
                 }
             });
         });
