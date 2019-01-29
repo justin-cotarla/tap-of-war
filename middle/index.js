@@ -11,7 +11,7 @@ let intervalIdLoop;
 
 const initSockets = () => {
     
-    socket = io(`${process.env.REACT_APP_IP}/middleman`);
+    socket = io('tapofwar.com/middleman');
     socket.on('connect', () => {
         console.log('Connected to server');
     })
